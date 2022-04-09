@@ -1,0 +1,42 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Courses</h1>
+
+<br>
+
+<% col_max = 2%>
+
+<div class="container">
+  <% if current_user.is_instructor%>
+  <%= link_to "Add New Course", new_course_path, :class => "btn btn-outline-primary", :method => :get %>
+  <% end %>
+  <br>
+  <% ((@courses.length() / 2.0).ceil(0)).times do |row_creation_count| %>
+  <div class="row">
+    <% col_max.times do |col_creation_count| %>
+    <% if 2 * row_creation_count + col_creation_count < @courses.length()%>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><%= @courses[2 * row_creation_count + col_creation_count].full_code%></h5>
+          <% if not @courses[2 * row_creation_count + col_creation_count].instructor.nil?%>
+          <h6 class="card-subtitle mb-2 text-muted"><%= @courses[2 * row_creation_count + col_creation_count].instructor.full_name %></h6>
+          <% end %>
+          <p class="card-text"><%=@courses[2 * row_creation_count + col_creation_count].description.truncate(120)  %></p>
+          <%= link_to "Show", @courses[2 * row_creation_count + col_creation_count], :class => "btn btn-outline-primary", :method => :get %>
+          <br>
+          <% if (User.students.include?(current_user)) && (not @courses[2 * row_creation_count + col_creation_count].users.include?(current_user))%>
+          <%= link_to "Add", "add_course/#{current_user.id}/#{@courses[2 * row_creation_count + col_creation_count].id}", :class => "btn btn-outline-primary", :method => :post %>
+          <% end %>
+          <% if (current_user.is_instructor) && current_user == @courses[2 * row_creation_count + col_creation_count].instructor%>
+          <%= link_to "Edit", "courses/#{@courses[2 * row_creation_count + col_creation_count].id}/edit", :class => "btn btn-outline-primary", :method => :get %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <% end %>
+    <% end %>
+  </div>
+  <br>
+  <% end %>
+</div>

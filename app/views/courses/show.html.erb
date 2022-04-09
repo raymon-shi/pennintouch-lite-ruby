@@ -1,0 +1,46 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Course Information</h1>
+
+<p>
+  <strong>Department:</strong>
+  <%= @course.department.code %>
+</p>
+
+<p>
+  <strong>Code:</strong>
+  <%= @course.code %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @course.title %>
+</p>
+
+<p>
+  <strong>Instructor:</strong>
+  <% if not @course.instructor.nil?%>
+  <%= @course.instructor.full_name %>
+  <% else %>
+  <%= "N/A" %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @course.description %>
+</p>
+
+<% if current_user.is_instructor && current_user == @course.instructor %>
+<%= link_to "Edit", edit_course_path(@course), :class => "btn btn-outline-primary", :method => :get %>
+<br>
+<% end %>
+<% if (User.students.include?(current_user)) && (@course.students.include?(current_user))%>
+<% puts current_user%>
+<%= link_to "Drop Course", "/drop_course/#{current_user.id}/#{@course.id}", :class => "btn btn-outline-primary", :method => :delete %>
+<br>
+<% elsif (User.students.include?(current_user)) && (not @course.students.include?(current_user))%>
+<%= link_to "Add Course", "/add_course/#{current_user.id}/#{@course.id}", :class => "btn btn-outline-primary", :method => :post %>
+<br>
+<% end %>
+<%= link_to "Back", courses_path, :class => "btn btn-outline-primary", :method => :get %>
